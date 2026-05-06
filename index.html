@@ -1,9 +1,359 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Ben Miosky</title>
-  </head>
-  <body>
-    <h1>Coming Soon</h1>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ben Miosky</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f5f0;
+      --accent: #e8ff00;
+      --mid: #1a1a1a;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.4;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 50;
+      mix-blend-mode: normal;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      opacity: 0;
+      animation: fadeDown 0.6s ease 0.2s forwards;
+    }
+
+    .nav-tag {
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,245,240,0.4);
+      opacity: 0;
+      animation: fadeDown 0.6s ease 0.4s forwards;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+    }
+
+    /* Left panel */
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 3rem 4rem 3rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.5s forwards;
+    }
+
+    .hero-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 10vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.65s forwards;
+    }
+
+    .hero-name span {
+      display: block;
+      color: var(--accent);
+    }
+
+    .hero-tagline {
+      margin-top: 2rem;
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(245,245,240,0.55);
+      max-width: 360px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.85s forwards;
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--accent);
+      padding: 0.9rem 2rem;
+      text-decoration: none;
+      width: fit-content;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1.05s forwards;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .hero-cta:hover {
+      background: var(--white);
+      transform: translateY(-2px);
+    }
+
+    .hero-cta .arrow {
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .hero-cta:hover .arrow { transform: translateX(4px); }
+
+    /* Right panel */
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 50%, #0a0a0a 100%);
+    }
+
+    /* Big background letters */
+    .bg-text {
+      position: absolute;
+      bottom: -2rem;
+      right: -1rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(10rem, 18vw, 22rem);
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(232,255,0,0.12);
+      letter-spacing: -0.02em;
+      user-select: none;
+      pointer-events: none;
+      opacity: 0;
+      animation: fadeIn 1.2s ease 1s forwards;
+    }
+
+    /* Geometric accent */
+    .geo-circle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(200px, 35vw, 380px);
+      height: clamp(200px, 35vw, 380px);
+      border-radius: 50%;
+      border: 1px solid rgba(232,255,0,0.15);
+      opacity: 0;
+      animation: scaleIn 1s ease 0.8s forwards;
+    }
+
+    .geo-circle::before {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(232,255,0,0.08);
+    }
+
+    .geo-circle::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 30px rgba(232,255,0,0.6);
+    }
+
+    /* Status pill */
+    .status-pill {
+      position: absolute;
+      bottom: 3rem;
+      left: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245,245,240,0.45);
+      opacity: 0;
+      animation: fadeUp 0.6s ease 1.3s forwards;
+    }
+
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(232,255,0,0.8);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,245,240,0.25);
+      opacity: 0;
+      animation: fadeIn 1s ease 1.6s forwards;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(232,255,0,0.6), transparent);
+      animation: scrollDrop 1.5s ease-in-out infinite;
+    }
+
+    /* Divider line */
+    .hero-divider {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(232,255,0,0.2) 30%, rgba(232,255,0,0.2) 70%, transparent);
+      z-index: 3;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+      to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    @keyframes scrollDrop {
+      0%, 100% { transform: scaleY(1); transform-origin: top; }
+      50% { transform: scaleY(0.4); transform-origin: top; }
+    }
+
+    /* Mobile */
+    @media (max-width: 700px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-divider { display: none; }
+      .hero-left { padding: 7rem 1.75rem 4rem; }
+      .status-pill { left: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">BPM</div>
+    <div class="nav-tag">Portfolio — Coming Soon</div>
+  </nav>
+
+  <div class="hero-divider"></div>
+
+  <section class="hero">
+    <div class="hero-left">
+      <p class="eyebrow">Welcome</p>
+      <h1 class="hero-name">
+        Ben<br>
+        <span>Miosky</span>
+      </h1>
+      <p class="hero-tagline">
+        Something great is on its way. Check back soon.
+      </p>
+      <a href="mailto:bmiosky@gmail.com" class="hero-cta">
+        Get in touch <span class="arrow">→</span>
+      </a>
+
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        Site under construction
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="geo-circle"></div>
+      <div class="bg-text">BM</div>
+    </div>
+  </section>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+
+</body>
 </html>
