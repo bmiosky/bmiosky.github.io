@@ -4,355 +4,335 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ben Miosky</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black: #0a0a0a;
-      --white: #f5f5f0;
-      --accent: #e8ff00;
-      --mid: #1a1a1a;
+      --bg: #0e0e0e;
+      --off: #161616;
+      --light: #f2ede6;
+      --mid: #6b6560;
+      --blue: #3d6bce;
+      --blue-dim: rgba(61,107,206,0.12);
     }
 
     html, body {
       height: 100%;
-      background: var(--black);
-      color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      overflow-x: hidden;
+      background: var(--bg);
+      overflow: hidden;
+      font-family: 'Syne', sans-serif;
     }
 
-    /* Grain overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 100;
-      opacity: 0.4;
-    }
-
-    /* Nav */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      padding: 1.5rem 2.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 50;
-      mix-blend-mode: normal;
-    }
-
-    .nav-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-      opacity: 0;
-      animation: fadeDown 0.6s ease 0.2s forwards;
-    }
-
-    .nav-tag {
-      font-size: 0.75rem;
-      font-weight: 300;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(245,245,240,0.4);
-      opacity: 0;
-      animation: fadeDown 0.6s ease 0.4s forwards;
-    }
-
-    /* Hero */
-    .hero {
-      min-height: 100vh;
+    .layout {
+      height: 100vh;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      position: relative;
     }
 
     /* Left panel */
-    .hero-left {
+    .left {
+      position: relative;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 8rem 3rem 4rem 3rem;
+      justify-content: flex-end;
+      padding: 3.5rem;
+      background: var(--off);
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeIn 0.8s ease 0.1s forwards;
+    }
+
+    /* Large background initial */
+    .bg-letter {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-55%, -50%);
+      font-size: 42vw;
+      font-weight: 800;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(242,237,230,0.04);
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+      letter-spacing: -0.05em;
+    }
+
+    /* Thin vertical line accent */
+    .v-line {
+      position: absolute;
+      top: 3.5rem;
+      left: 3.5rem;
+      width: 1px;
+      height: 0;
+      background: var(--blue);
+      animation: growDown 0.8s ease 0.7s forwards;
+    }
+
+    .left-content {
       position: relative;
       z-index: 2;
     }
 
-    .eyebrow {
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.5rem;
+    .first-name {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      color: rgba(242,237,230,0.35);
+      display: block;
+      letter-spacing: 0.02em;
       opacity: 0;
-      animation: fadeUp 0.7s ease 0.5s forwards;
+      animation: fadeUp 0.8s ease 0.5s forwards;
     }
 
-    .hero-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(5rem, 10vw, 9rem);
-      line-height: 0.9;
-      letter-spacing: 0.02em;
-      color: var(--white);
+    .last-name {
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 800;
+      color: var(--light);
+      display: block;
+      letter-spacing: -0.03em;
+      line-height: 0.95;
       opacity: 0;
       animation: fadeUp 0.8s ease 0.65s forwards;
     }
 
-    .hero-name span {
-      display: block;
-      color: var(--accent);
-    }
-
-    .hero-tagline {
-      margin-top: 2rem;
-      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-      font-weight: 300;
-      line-height: 1.7;
-      color: rgba(245,245,240,0.55);
-      max-width: 360px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.85s forwards;
-    }
-
-    .hero-cta {
-      margin-top: 3rem;
-      display: inline-flex;
+    .left-footer {
+      margin-top: 2.5rem;
+      display: flex;
       align-items: center;
-      gap: 0.75rem;
-      font-size: 0.8rem;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeIn 0.8s ease 1s forwards;
+    }
+
+    .blue-pill {
+      background: var(--blue-dim);
+      border: 1px solid rgba(61,107,206,0.3);
+      color: #7fa3e8;
+      font-size: 0.65rem;
       font-weight: 500;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--black);
-      background: var(--accent);
-      padding: 0.9rem 2rem;
-      text-decoration: none;
-      width: fit-content;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 1.05s forwards;
-      transition: background 0.2s, transform 0.2s;
+      padding: 0.35rem 0.9rem;
     }
-
-    .hero-cta:hover {
-      background: var(--white);
-      transform: translateY(-2px);
-    }
-
-    .hero-cta .arrow {
-      font-size: 1rem;
-      transition: transform 0.2s;
-    }
-
-    .hero-cta:hover .arrow { transform: translateX(4px); }
 
     /* Right panel */
-    .hero-right {
+    .right {
       position: relative;
-      overflow: hidden;
-    }
-
-    .hero-right::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 50%, #0a0a0a 100%);
-    }
-
-    /* Big background letters */
-    .bg-text {
-      position: absolute;
-      bottom: -2rem;
-      right: -1rem;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(10rem, 18vw, 22rem);
-      line-height: 1;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(232,255,0,0.12);
-      letter-spacing: -0.02em;
-      user-select: none;
-      pointer-events: none;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3.5rem;
       opacity: 0;
-      animation: fadeIn 1.2s ease 1s forwards;
+      animation: fadeIn 0.8s ease 0.3s forwards;
     }
 
-    /* Geometric accent */
-    .geo-circle {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: clamp(200px, 35vw, 380px);
-      height: clamp(200px, 35vw, 380px);
-      border-radius: 50%;
-      border: 1px solid rgba(232,255,0,0.15);
+    .right-top {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .monogram {
+      width: 52px;
+      height: 44px;
+      border: 1px solid rgba(242,237,230,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(242,237,230,0.3);
       opacity: 0;
-      animation: scaleIn 1s ease 0.8s forwards;
+      animation: fadeIn 0.8s ease 0.8s forwards;
     }
 
-    .geo-circle::before {
-      content: '';
+    .contact-btn {
+      display: inline-block;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #7fa3e8;
+      text-decoration: none;
+      border: 1px solid rgba(61,107,206,0.35);
+      padding: 0.65rem 1.4rem;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .contact-btn:hover {
+      background: var(--blue-dim);
+      border-color: rgba(61,107,206,0.7);
+      color: #a8c4f0;
+    }
+
+    /* Center graphic */
+    .right-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      position: relative;
+    }
+
+    .graphic {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      opacity: 0;
+      animation: scaleIn 1s ease 0.6s forwards;
+    }
+
+    .graphic-ring {
       position: absolute;
-      inset: 20px;
       border-radius: 50%;
-      border: 1px solid rgba(232,255,0,0.08);
+      border: 1px solid rgba(242,237,230,0.07);
     }
 
-    .geo-circle::after {
-      content: '';
+    .ring-1 { inset: 0; }
+    .ring-2 { inset: 30px; border-color: rgba(61,107,206,0.2); }
+    .ring-3 { inset: 60px; border-color: rgba(242,237,230,0.04); }
+
+    .graphic-dot {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 12px; height: 12px;
+      width: 8px; height: 8px;
       border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 30px rgba(232,255,0,0.6);
+      background: var(--blue);
+      box-shadow: 0 0 0 12px var(--blue-dim);
     }
 
-    /* Status pill */
-    .status-pill {
+    /* Orbit dot */
+    .orbit-dot {
       position: absolute;
-      bottom: 3rem;
-      left: 3rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.72rem;
-      font-weight: 400;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(245,245,240,0.45);
-      opacity: 0;
-      animation: fadeUp 0.6s ease 1.3s forwards;
+      top: 50%; left: 50%;
+      width: 100%;
+      height: 100%;
+      margin-top: -50%;
+      margin-left: -50%;
+      animation: orbit 6s linear infinite;
     }
 
-    .status-dot {
-      width: 7px; height: 7px;
+    .orbit-dot::before {
+      content: '';
+      position: absolute;
+      top: -4px; left: 50%;
+      width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 8px rgba(232,255,0,0.8);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    /* Scroll indicator */
-    .scroll-hint {
-      position: absolute;
-      bottom: 2.5rem;
-      left: 50%;
+      background: rgba(61,107,206,0.7);
       transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(245,245,240,0.25);
+    }
+
+    @keyframes orbit {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Right bottom */
+    .right-bottom {
       opacity: 0;
-      animation: fadeIn 1s ease 1.6s forwards;
+      animation: fadeIn 0.8s ease 1.1s forwards;
     }
 
-    .scroll-line {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, rgba(232,255,0,0.6), transparent);
-      animation: scrollDrop 1.5s ease-in-out infinite;
+    .label {
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 0.4rem;
     }
 
-    /* Divider line */
-    .hero-divider {
-      position: absolute;
+    .tagline {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: rgba(242,237,230,0.4);
+      line-height: 1.6;
+      max-width: 220px;
+    }
+
+    /* Divider line between panels */
+    .divider {
+      position: fixed;
       top: 0; bottom: 0;
       left: 50%;
       width: 1px;
-      background: linear-gradient(to bottom, transparent, rgba(232,255,0,0.2) 30%, rgba(232,255,0,0.2) 70%, transparent);
-      z-index: 3;
+      background: linear-gradient(to bottom, transparent, rgba(242,237,230,0.06) 30%, rgba(242,237,230,0.06) 70%, transparent);
+      pointer-events: none;
     }
 
     /* Animations */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
     @keyframes fadeIn {
       from { opacity: 0; }
       to   { opacity: 1; }
     }
 
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
     @keyframes scaleIn {
-      from { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
-      to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      from { opacity: 0; transform: scale(0.8); }
+      to   { opacity: 1; transform: scale(1); }
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.7); }
-    }
-
-    @keyframes scrollDrop {
-      0%, 100% { transform: scaleY(1); transform-origin: top; }
-      50% { transform: scaleY(0.4); transform-origin: top; }
+    @keyframes growDown {
+      from { height: 0; }
+      to   { height: calc(100% - 7rem); }
     }
 
     /* Mobile */
-    @media (max-width: 700px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-right { display: none; }
-      .hero-divider { display: none; }
-      .hero-left { padding: 7rem 1.75rem 4rem; }
-      .status-pill { left: 1.75rem; }
+    @media (max-width: 650px) {
+      .layout { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+      .right { display: none; }
+      .left { justify-content: center; padding: 2.5rem; }
+      .v-line { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <div class="nav-logo">BPM</div>
-    <div class="nav-tag">Portfolio — Coming Soon</div>
-  </nav>
+  <div class="divider"></div>
 
-  <div class="hero-divider"></div>
+  <div class="layout">
 
-  <section class="hero">
-    <div class="hero-left">
-      <p class="eyebrow">Welcome</p>
-      <h1 class="hero-name">
-        Ben<br>
-        <span>Miosky</span>
-      </h1>
-      <p class="hero-tagline">
-        Something great is on its way. Check back soon.
-      </p>
-      <a href="mailto:bmiosky@gmail.com" class="hero-cta">
-        Get in touch <span class="arrow">→</span>
-      </a>
-
-      <div class="status-pill">
-        <span class="status-dot"></span>
-        Site under construction
+    <div class="left">
+      <div class="bg-letter">B</div>
+      <div class="v-line"></div>
+      <div class="left-content">
+        <span class="first-name">Ben</span>
+        <span class="last-name">Miosky</span>
+        <div class="left-footer">
+          <div class="blue-pill">Portfolio</div>
+        </div>
       </div>
     </div>
 
-    <div class="hero-right">
-      <div class="geo-circle"></div>
-      <div class="bg-text">BM</div>
-    </div>
-  </section>
+    <div class="right">
+      <div class="right-top">
+        <div class="monogram">BPM</div>
+      </div>
 
-  <div class="scroll-hint">
-    <div class="scroll-line"></div>
-    scroll
+      <div class="right-center">
+        <div class="graphic">
+          <div class="graphic-ring ring-1"></div>
+          <div class="graphic-ring ring-2"></div>
+          <div class="graphic-ring ring-3"></div>
+          <div class="graphic-dot"></div>
+          <div class="orbit-dot"></div>
+        </div>
+      </div>
+
+      <div class="right-bottom">
+        <a href="mailto:bmiosky@gmail.com" class="contact-btn">Get in touch</a>
+      </div>
+    </div>
+
   </div>
 
 </body>
